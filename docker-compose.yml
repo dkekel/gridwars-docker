@@ -11,34 +11,33 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://database:5432/gridwars
     ports:
       - 8080:8080
-      - 5005:5005
-#    command:
-#      "gradle bootRun --debug-jvm"
+#      - 5005:5005
 
   frontend:
     build:
-      context: ./gridwars-ui
+      context: ./ui
     ports:
       - 8081:8080
     volumes:
-      - ./gridwars-ui:/app
+      - ./ui:/app
       - /app/node_modules
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
 
-#  gridwars:
-#    depends_on:
-#      - oauth
-#      - frontend
-#    build:
-#      context: ./gridwars
-#    environment:
-#      - OAUTH_HOST_NAME=oauth
-#    ports:
-#      - 8090:8090
-#    volumes:
-#      - ./gridwars:/home/gradle/gridwars
+  gridwars:
+    depends_on:
+      - oauth
+      - frontend
+    build:
+      context: ./server
+    environment:
+      - OAUTH_HOST_NAME=oauth
+    ports:
+      - 8090:8090
+#      - 5005:5005
+    volumes:
+      - ./server:/home/gradle/gridwars
 
   database:
     build:
